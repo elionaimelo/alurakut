@@ -94,7 +94,7 @@ export default function Home(props) {
     .then((response) => response.json()) // Pega o retorno do response.json() e já retorna
     .then((respostaCompleta) => {
       const comunidadesVindasDoDato = respostaCompleta.data.allCommunities;
-      console.log(comunidadesVindasDoDato)
+      // console.log(comunidadesVindasDoDato)
       setComunidades(comunidadesVindasDoDato)
     })
     // .then(function (response) {
@@ -130,10 +130,8 @@ export default function Home(props) {
             <form onSubmit={function handleCriaComunidade(e) {
                 e.preventDefault();
                 const dadosDoForm = new FormData(e.target);
-
                 console.log('Campo: ', dadosDoForm.get('title'));
                 console.log('Campo: ', dadosDoForm.get('image'));
-
                 const comunidade = {
                   title: dadosDoForm.get('title'),
                   imageurl: dadosDoForm.get('image'),
