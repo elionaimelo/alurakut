@@ -72,9 +72,7 @@ export default function Home(props) {
     "felipefialho",
   ];
   const [seguidores, setSeguidores] = React.useState([]);
-  // 0 - Pegar o array de dados do github
   React.useEffect(function () {
-    // GET
     fetch("https://api.github.com/users/peas/followers")
       .then(function (respostaDoServidor) {
         return respostaDoServidor.json();
@@ -83,7 +81,6 @@ export default function Home(props) {
         setSeguidores(respostaCompleta);
       });
 
-    // API GraphQL
     fetch("https://graphql.datocms.com/", {
       method: "POST",
       headers: {
@@ -92,29 +89,23 @@ export default function Home(props) {
         Accept: "application/json",
       },
       body: JSON.stringify({
-        query: `query{
-        allCommunities {
-          id
-          title
-          imageurl
-          creatorslug
-        }
-      }`,
+        "query": `query{
+          allComunidades {
+            id
+            title
+            imageurl
+            creatorslug
+          }
+        }`,
       }),
     })
       .then((response) => response.json()) // Pega o retorno do response.json() e já retorna
       .then((respostaCompleta) => {
-        const comunidadesVindasDoDato = respostaCompleta.data.allCommunities;
+        const comunidadesVindasDoDato = respostaCompleta.data.allComunidades;
         // console.log(comunidadesVindasDoDato)
         setComunidades(comunidadesVindasDoDato);
       });
-    // .then(function (response) {
-    //   return response.json()
-    // })
   }, []);
-
-  // 1 - Criar um box que vai ter um map, baseado nos items do array
-  // que pegamos do GitHub
 
   return (
     <>
@@ -191,7 +182,7 @@ export default function Home(props) {
               {comunidades.map((itemAtual) => {
                 return (
                   <li key={itemAtual.id}>
-                    <a href={`/communities/${itemAtual.id}`}>
+                    <a href={`/comunidades/${itemAtual.id}`}>
                       <img src={itemAtual.imageurl} />
                       <span>{itemAtual.title}</span>
                     </a>

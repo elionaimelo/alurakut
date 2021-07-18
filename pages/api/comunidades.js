@@ -3,11 +3,11 @@ import { SiteClient } from "datocms-client";
 export default async function recebedorDeRequests(request, response) {
   (response) => response.json();
   if (request.method === "POST") {
-    const TOKEN = "012975c352c20062dd096e715e0b51";
+    const TOKEN = "59c7f8d97e794b8b0140e83c6173cf";
 
     const client = new SiteClient(TOKEN);
     const registroCriado = await client.items.create({
-      itemType: "976159", // ID do Model de "Communities" criado pelo Dato
+      itemType: "976848", // ID do Model de "Communities" criado pelo Dato
       ...request.body,
     });
     console.log(registroCriado);
