@@ -2,10 +2,33 @@ import React from 'react';
 // Hook do NextJS
 import { useRouter } from 'next/router';
 import nookies from 'nookies';
+import { useForm } from 'react-hook-form';
 
 export default function LoginScreen() {
   const router = useRouter();
-  const [githubUser, setGithubUser] = React.useState('elionaimelo');
+  const [githubUser, setGithubUser] = React.useState('');
+  const { register, handleSubmit, formState: { errors } } = useForm();
+
+  const onSubmit = data => {
+    fetch('https://alurakut.vercel.app/api/login', {
+        method: 'POST',
+        headers: {
+           'Content-Type': 'application/json'  
+        },
+        body: JSON.stringify({ githubUser: data })
+    })
+    .then(async (respostaDoServer) => {
+        const dadosDaResposta = await respostaDoServer.json()
+        const token = dadosDaResposta.token;
+        nookies.set(null, 'USER_TOKEN', token, {
+            path: '/',
+            maxAge: 86400 * 7 
+        })
+        router.push('/')
+    })
+  }
+  
+
 
   return (
     <main style={{ display: 'flex', flex: 1, alignItems: 'center', justifyContent: 'center' }}>
@@ -19,41 +42,20 @@ export default function LoginScreen() {
         </section>
 
         <section className="formArea">
-          <form className="box" onSubmit={(infosDoEvento) => {
-                infosDoEvento.preventDefault();
-                // alert('Alguém clicou no botão!')
-                console.log('Usuário: ', githubUser)
-                fetch('https://alurakut.vercel.app/api/login', {
-                    method: 'POST',
-                    headers: {
-                       'Content-Type': 'application/json'  
-                    },
-                    body: JSON.stringify({ githubUser: githubUser })
-                })
-                .then(async (respostaDoServer) => {
-                    const dadosDaResposta = await respostaDoServer.json()
-                    const token = dadosDaResposta.token;
-                    nookies.set(null, 'USER_TOKEN', token, {
-                        path: '/',
-                        maxAge: 86400 * 7 
-                    })
-                    router.push('/')
-                })
-          }}>
+          <form className="box" onSubmit={handleSubmit(onSubmit)}>
             <p>
               Acesse agora mesmo com seu usuário do <strong>GitHub</strong>!
           </p>
             <input
+                {...register("usuario", { required: true })} 
                 placeholder="Usuário"
                 value={githubUser}
                 onChange={(evento) => {
                     setGithubUser(evento.target.value)
                 }}
             />
-            {githubUser.length === 0
-                ? 'Preencha o campo'
-                : ''
-            }
+            {errors.usuario && <span>Este campo é obrigatório</span>}
+            <br/>
             <button type="submit">
               Login
             </button>
