@@ -3,6 +3,8 @@ import nookies from "nookies";
 import jwt from "jsonwebtoken";
 import MainGrid from "../src/components/MainGrid";
 import Box from "../src/components/Box";
+import axios from "axios";
+import Router from "next/router"
 import {
   AlurakutMenu,
   AlurakutProfileSidebarMenuDefault,
@@ -218,6 +220,7 @@ export default function Home(props) {
 export async function getServerSideProps(context) {
   const cookies = nookies.get(context);
   const token = cookies.USER_TOKEN;
+
   const { isAuthenticated } = await fetch(
     "https://alurakut.vercel.app/api/auth",
     {
@@ -242,4 +245,8 @@ export async function getServerSideProps(context) {
       githubUser,
     }, // will be passed to the page component as props
   };
+  
+
+
 }
+
